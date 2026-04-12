@@ -1,0 +1,4 @@
+All Time Templates have to be given in the format (workTime/restTime)
+30/10
+25/5
+50/10
