@@ -5,7 +5,7 @@
  */
 public class Timer {
 	// = = = CLASS FIELDS = = = 
-	final private int MILLISECONDS = 1000;
+	final private int MILLISECONDS = 1000; //Needed for the 
 	private int seconds;
 	
 	// = = = GETTERS AND SETTERS = = = 
@@ -47,7 +47,8 @@ public class Timer {
 	}//End updateTime()
 	
 	/**
-	 * Returns a formatted time based off of the seconds given.
+	 * Returns a formatted time based off of the seconds given. 
+	 * 00:00 Format
 	 * @param secondsGiven
 	 * @return formattedString
 	 */

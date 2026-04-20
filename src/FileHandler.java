@@ -54,6 +54,9 @@ public class FileHandler {
 			templates.add(newTemplate);
 		}
 		
+		//Closing Input Stream
+		in.close();
+		
 		//Returning Final Template
 		return templates;
 	}//End getTemplates()
