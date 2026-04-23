@@ -12,11 +12,28 @@ import javax.swing.*;
 
 //180 , 330 , 190
 
+/*
+ 	For future team. How the timer works:
+ 		The program is using swing's Timer class that was named JTimer.
+ 		The program uses a custom class named Timer
+ 		
+ 		The JTimer starts and is constantly running. Due to swing being
+ 		single threaded. JTimer.start() means that the program will be 
+ 		constantly checking to see if a function can be run, in this case
+ 		awaitTimerAction(). This function will handle the logic within the 
+ 		timer class. Timer holds the current sequence, the amount of time,
+ 		and also 
+ */
+
 public class PomodoroFrame extends JFrame{
 	// = = = CLASS FIELDS = = = 
 	final int HEIGHT = 700;
 	final int WIDTH = 800;
 	final String COLOR_HEX[] = {"#F63049", "#D02752", "#8A244B", "#111F35"}; //[Lght Red], [Medium Red], [Dark Red], [Dark Grey]
+	final int MILLISECONDS_TIMER = 1000;
+	
+	private Timer timer;			  //My custom timer
+	private javax.swing.Timer JTimer; //Swings own timer
 	
 	private JFrame frame;
 		//Panels
@@ -34,9 +51,9 @@ public class PomodoroFrame extends JFrame{
 	private JLabel sequenceLabel;
 	
 		//Buttons
-	private JButton sequence1Button;
-	private JButton sequence2Button;
-	private JButton sequence3Button;
+	private PresetButton sequence1Button;
+	private PresetButton sequence2Button;
+	private PresetButton sequence3Button;
 	private JButton backButton;
 	private JButton forwardButton;
 	private JButton startButton;
@@ -45,8 +62,20 @@ public class PomodoroFrame extends JFrame{
 	
 	
 	// = = = CONSTRUCTOR = = =
-	public PomodoroFrame()
+	public PomodoroFrame(Timer timer)
 	{
+		//Initializing Timer Objects
+		this.timer = timer;		
+		this.JTimer = new javax.swing.Timer(MILLISECONDS_TIMER, e -> {
+			try {
+				awaitTimerAction(); //This is the actual logic of the code
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
+		JTimer.start();
+		
 		//Creating the Frame
 		setupFrame();
 		
@@ -82,6 +111,8 @@ public class PomodoroFrame extends JFrame{
 //		} catch (Exception e) {
 //		    e.printStackTrace();
 	}//End generateFont
+	
+		// - - - FRAME FUNCTIONS - - - 
 	
 	/**
 	 * This method handles all the necessary functions and
@@ -178,7 +209,7 @@ public class PomodoroFrame extends JFrame{
 			//Center Buttons Panel
 		gbc.insets = new Insets(10, 15, 0, 15); //Setting the Padding
 		
-		sequence1Button = new JButton("25/5");
+		sequence1Button = new PresetButton("25/5", new TimeTemplate(25,5));
 		sequence1Button.setPreferredSize(new Dimension(150, 90));
 		sequence1Button.setForeground(Color.white);
 		sequence1Button.setFont(new Font("SansSerif", Font.BOLD, 24));
@@ -186,7 +217,9 @@ public class PomodoroFrame extends JFrame{
 		gbc.gridx = 0; gbc.gridy = 0;
 		centerButtonsPanel.add(sequence1Button, gbc);
 		
-		sequence2Button = new JButton("30/10");
+		sequence1Button.addActionListener(e -> setTimerPreset(sequence1Button));
+		
+		sequence2Button = new PresetButton("30/10", new TimeTemplate(30, 10));
 		sequence2Button.setPreferredSize(new Dimension(150, 90));
 		sequence2Button.setForeground(Color.white);
 		sequence2Button.setFont(new Font("SansSerif", Font.BOLD, 24));
@@ -194,13 +227,17 @@ public class PomodoroFrame extends JFrame{
 		gbc.gridx = 1; gbc.gridy = 0;
 		centerButtonsPanel.add(sequence2Button, gbc);
 		
-		sequence3Button = new JButton("20/10");
+		sequence2Button.addActionListener(e -> setTimerPreset(sequence2Button));
+		
+		sequence3Button = new PresetButton("20/10", new TimeTemplate(20,10));
 		sequence3Button.setPreferredSize(new Dimension(150, 90));
 		sequence3Button.setForeground(Color.white);
 		sequence3Button.setFont(new Font("SansSerif", Font.BOLD, 24));
 		sequence3Button.setBackground(Color.decode(COLOR_HEX[2]));
 		gbc.gridx = 2; gbc.gridy = 0;
 		centerButtonsPanel.add(sequence3Button, gbc);
+		
+		sequence3Button.addActionListener(e -> setTimerPreset(sequence3Button));
 		
 		// - - - LOWER PANEL - - - 
 		backButton = new JButton("<");
@@ -209,11 +246,15 @@ public class PomodoroFrame extends JFrame{
 		backButton.setBackground(Color.decode(COLOR_HEX[3]));
 		backButton.setForeground(Color.white);
 		
+		backButton.addActionListener(e -> setSequenceBackward());
+		
 		forwardButton = new JButton(">");
 		forwardButton.setPreferredSize(new Dimension(90, 90));
 		forwardButton.setFont(new Font("SansSerif", Font.BOLD, 24));
 		forwardButton.setBackground(Color.decode(COLOR_HEX[3]));
 		forwardButton.setForeground(Color.white);
+		
+		forwardButton.addActionListener(e -> setSequenceForward());
 		
 		restartButton = new JButton("⟳");
 		restartButton.setPreferredSize(new Dimension(90, 90));
@@ -221,17 +262,23 @@ public class PomodoroFrame extends JFrame{
 		restartButton.setBackground(Color.decode(COLOR_HEX[3]));
 		restartButton.setForeground(Color.white);
 		
+		restartButton.addActionListener(e -> restartSequence());
+		
 		startButton = new JButton("Start");
 		startButton.setPreferredSize(new Dimension(180, 90));
 		startButton.setFont(new Font("SansSerif", Font.BOLD, 24));
 		startButton.setBackground(Color.decode(COLOR_HEX[3]));
 		startButton.setForeground(Color.white);
 		
+		startButton.addActionListener(e -> startButton());
+		
 		stopButton = new JButton("Stop");
 		stopButton.setPreferredSize(new Dimension(180, 90));
 		stopButton.setFont(new Font("SansSerif", Font.BOLD, 24));
 		stopButton.setBackground(Color.decode(COLOR_HEX[3]));
 		stopButton.setForeground(Color.white);
+		
+		stopButton.addActionListener(e -> stopButton());
 		
 			//Adding the Buttons to the Panel
 		gbc.gridx = 0; gbc.gridy = 0;
@@ -249,5 +296,81 @@ public class PomodoroFrame extends JFrame{
 		gbc.gridx = 4;
 		lowerPanel.add(forwardButton, gbc);
 	}//End setupLabelsAndButtons
+	
+	
+		// - - - BUTTONS FUNCTIONS - - -
+	
+	/**
+	 * This method sets the timer to the button's preset amount of time.
+	 * This also sets the timer to run in sequences of its given time.
+	 * @param button
+	 */
+	private void setTimerPreset(PresetButton button)
+	{
+		//Getting the amount of time from work seconds
+		timer.setSeconds(button.getButtonTemplate().getWorkSecondsTotal());
+		timer.setCurrentTemplate(button.getButtonTemplate());
+		
+		timerLabel.setText(timer.returnFormattedTime(timer.getSeconds()));
+		System.out.println(button.getText() + " button has been clicked");
+	}//End setTimerPreset
+	
+	/**
+	 * THIS IS THE MOST IMPORTANT METHOD FOR THE JTIMER
+	 * Runs every second to check if the boolean condition is 
+	 * true so that the actual second counter can go down or not.
+	 * @throws InterruptedException
+	 */
+	private void awaitTimerAction() throws InterruptedException
+	{
+		if(timer.getIsOn() == true)
+		{
+			//Setting the Timer On
+			timer.enableTimer();
+			
+			//GUI Updates
+			timer.updateTimerLabel(timerLabel);
+			timer.updateSequenceLabel(sequenceLabel);
+			
+			//Logic for Work and Rest Cycle
+			if(timer.getSeconds() == 0 && timer.getCurrentSequence() > 0)
+			{
+				//Checking if it is rest or work
+				if(timer.getCurrentSequence() % 2 == 0)
+				{
+					timer.setSeconds(timer.getCurrentTemplate().getWorkSecondsTotal()); //Setting to Work Time
+				}
+				else
+				{
+					timer.setSeconds(timer.getCurrentTemplate().getRestSecondsTotal()); //Setting to Rest Time
+				}
+			}
+		}
+	}//End awaitTimerAction()
+	
+	private void startButton()
+	{
+		timer.enableTimer();
+	}
+	
+	private void stopButton()
+	{
+		timer.disableTimer();
+	}
+	
+	private void setSequenceBackward()
+	{
+		System.out.println("Back Button has been pressed");
+	}//End setSequenceBackward
+	
+	private void setSequenceForward()
+	{
+		System.out.println("Forward Button has been pressed");
+	}//End setSequenceForward
+	
+	private void restartSequence()
+	{
+		System.out.println("The Sequence has been Restarted");
+	}
 	
 }//End class PomodoroFrame

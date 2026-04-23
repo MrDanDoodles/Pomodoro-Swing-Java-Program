@@ -11,20 +11,32 @@ public class TimeTemplate {
 	private int restSecondsTotal;
 	
 	// = = = GETTERS AND SETTERS = = = 
+	/**
+	 * Gets the total amount of work in
+	 * seconds
+	 * @return workSecondsTotal
+	 */
 	public int getWorkSecondsTotal() {
 		return workSecondsTotal;
 	}
-	public void setWorkSecondsTotal(int workSecondsTotal) {
-		this.workSecondsTotal = workSecondsTotal;
-	}
+	
+	/**
+	 * Gets the total amount of rest in
+	 * seconds
+	 * @return restSecondsTotal
+	 */
 	public int getRestSecondsTotal() {
 		return restSecondsTotal;
 	}
-	public void setRestSecondsTotal(int restSecondsTotal) {
-		this.restSecondsTotal = restSecondsTotal;
-	}
 	
 	// = = = CONSTRUCTORS = = = 
+	/**
+	 * This constructor is needed for the 
+	 * conversion of minutes to a total
+	 * amount of seconds.
+	 * @param workMin
+	 * @param restMin
+	 */
 	public TimeTemplate(int workMin, int restMin)
 	{
 		//Setting Data

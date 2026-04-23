@@ -6,6 +6,11 @@
 	This program is a timer that counts down a certain amount of time
 	and a certain amount of rest. Custom times can be given, or a 
 	preset chosen amount of time can also be selected.
+	
+	TODO:
+		-Figure out how to get custom fonts to work in Swing
+			-Change the fonts on all the labels and timers to custom fonts
+		-Figure out how to make rounded buttons
  */
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,22 +25,13 @@ public class PomodoroProgram {
 	public static void main(String[] args) throws FileNotFoundException {
 		// = = = VARIABLES = = = 
 		final String TEMPLATE_PATH = "Templates.txt";
-		ArrayList<TimeTemplate> templates = new ArrayList<TimeTemplate>();
 		FileHandler fh = new FileHandler(TEMPLATE_PATH);
 		
-		//Getting the Templates
-		templates = fh.getTemplates();
-		
-		//Setting the Timer
-//		System.out.println("Work Timer");
-//		Timer myTimer = new Timer(templates.get(1).getWorkSecondsTotal());
-//		myTimer.updateTime(); //Work Timer
-//		
-//		System.out.println("Rest Timer");
-//		myTimer.setSeconds(templates.get(1).getRestSecondsTotal());
-//		myTimer.updateTime(); //Rest Timer
+		//Creating a timer
+		Timer timer = new Timer(0);
 
-		PomodoroFrame frame = new PomodoroFrame();
+		//Creating the frame
+		PomodoroFrame frame = new PomodoroFrame(timer);
 		
 	}//End main()
 

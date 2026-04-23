@@ -1,3 +1,4 @@
+import javax.swing.JLabel;
 
 /**
  * This class handles all the variables and methods to
@@ -6,7 +7,13 @@
 public class Timer {
 	// = = = CLASS FIELDS = = = 
 	final private int MILLISECONDS = 1000; //Needed for the 
+	final private int DEFAULT_SEQUENCE = 4;
+	
+	private TimeTemplate currentTemplate;
 	private int seconds;
+	private int currentSequence;
+	private boolean isOn;
+	private JLabel timeLabel;
 	
 	// = = = GETTERS AND SETTERS = = = 
 	
@@ -14,37 +21,76 @@ public class Timer {
 		return seconds;
 	}//End getSeconds
 
+	/**
+	 * This is the method that sets the total amount
+	 * of seconds the timer will be running through
+	 * @param seconds
+	 */
 	public void setSeconds(int seconds) {
 		this.seconds = seconds;
 	}//End setSeconds
-
+	
+	public boolean getIsOn()
+	{
+		return isOn;
+	}//End getIsOn
+	
+	public int getCurrentSequence()
+	{
+		return currentSequence;
+	}
+	
+	public TimeTemplate getCurrentTemplate()
+	{
+		return currentTemplate;
+	}
+	
+	public void setCurrentTemplate(TimeTemplate newTemplate)
+	{
+		this.currentTemplate  = newTemplate;
+	}
+	
 	// = = = CONSTRUCTOR = = = 
+	/**
+	 * Initializes the timer, takes in a param seconds.
+	 * The timer is set to off by default.
+	 * @param seconds
+	 */
 	public Timer(int seconds)
 	{
 		this.seconds = seconds;
-	}//End constructor
+		this.isOn = false;
+		this.currentSequence = this.DEFAULT_SEQUENCE;
+		this.currentTemplate = new TimeTemplate(30, 10);
+	}//End constructor	
 	
-	// = = = CLASS METHODS = = = 
+	// = = = CLASS METHODS = = = 	
 	/**
-	 * Displays what the current time is, 
-	 * based off of the seconds given.
+	 * This method actually updates the JLabel object
+	 * with the correctly formatted string of time.
+	 * @param timeLabel
+	 * @throws InterruptedException
 	 */
-	public void updateTime()
+	public void updateTimerLabel(JLabel timeLabel) throws InterruptedException
 	{
-		//Loop to count down each second
-		while(this.seconds > 0)
+		if(this.isOn == true && this.seconds > -1)
 		{
-			//The actual logic for counting down
-			try {
-				System.out.println(returnFormattedTime(seconds));
-				Thread.sleep(MILLISECONDS);
-				seconds--;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			//Updating Time Label and Lowering the Second
+			timeLabel.setText(returnFormattedTime(seconds));
+			seconds--;
+			
+			//Updating Sequence
+			if(this.seconds == 0)
+			{
+				this.currentSequence--;
 			}
-		}//end while
-		System.out.println("Timer is Done!");
-	}//End updateTime()
+		}	
+	}//End updateTimerLabel
+	
+	public void updateSequenceLabel(JLabel sequenceLabel)
+	{
+		sequenceLabel.setText(this.currentSequence + " Sequences Left");
+	}//End updateSequenceLabel
 	
 	/**
 	 * Returns a formatted time based off of the seconds given. 
@@ -52,7 +98,7 @@ public class Timer {
 	 * @param secondsGiven
 	 * @return formattedString
 	 */
-	private String returnFormattedTime(int secondsGiven)
+	public String returnFormattedTime(int secondsGiven)
 	{
 		//Local Vars
 		int minutes;
@@ -105,5 +151,19 @@ public class Timer {
 		return finalSeconds;
 	}//End convertTimeToSeconds
 	
+	
+	//Functions to enabale and disable the timer
+	public void enableTimer()
+	{
+		this.isOn = true;
+		System.out.println("Timer is On");
+		//swingTimer.start();
+		
+	}
+	public void disableTimer()
+	{
+		this.isOn = false;
+		System.out.println("Timer is Off");
+	}
 	
 }//End class Timer
