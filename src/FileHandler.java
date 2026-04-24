@@ -61,5 +61,19 @@ public class FileHandler {
 		return templates;
 	}//End getTemplates()
 	
+	public File loadFile(String path)
+	{
+		try
+		{
+			File newFile = new File(path);
+			System.out.println(newFile.getAbsolutePath());
+			return newFile;
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}//End loadFile();
 	
 }//End class FileHandler

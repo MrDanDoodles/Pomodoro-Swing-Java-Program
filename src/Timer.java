@@ -35,6 +35,16 @@ public class Timer {
 		return isOn;
 	}//End getIsOn
 	
+	public int getDefaultSequence()
+	{
+		return DEFAULT_SEQUENCE;
+	}
+	
+	public void setCurrentSequence(int amount)
+	{
+		this.currentSequence = amount;
+	}
+	
 	public int getCurrentSequence()
 	{
 		return currentSequence;
@@ -156,7 +166,7 @@ public class Timer {
 	public void enableTimer()
 	{
 		this.isOn = true;
-		System.out.println("Timer is On");
+		//System.out.println("Timer is On");
 		//swingTimer.start();
 		
 	}

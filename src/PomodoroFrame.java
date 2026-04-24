@@ -62,7 +62,12 @@ public class PomodoroFrame extends JFrame{
 	
 	
 	// = = = CONSTRUCTOR = = =
-	public PomodoroFrame(Timer timer)
+	/**
+	 * 
+	 * @param timer
+	 * @param iconImg
+	 */
+	public PomodoroFrame(Timer timer, ImageIcon iconImg)
 	{
 		//Initializing Timer Objects
 		this.timer = timer;		
@@ -84,6 +89,10 @@ public class PomodoroFrame extends JFrame{
 		
 		//Adding Content to the Major JPanels
 		setupLabelsAndButtons();
+		
+		//Setting the Image Icon
+		System.out.println(iconImg.getImageLoadStatus());
+		frame.setIconImage(iconImg.getImage());
 		
 		//Setting the frame visible
 		frame.setVisible(true);
@@ -246,7 +255,14 @@ public class PomodoroFrame extends JFrame{
 		backButton.setBackground(Color.decode(COLOR_HEX[3]));
 		backButton.setForeground(Color.white);
 		
-		backButton.addActionListener(e -> setSequenceBackward());
+		backButton.addActionListener(e -> {
+			try {
+				setSequenceBackward();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
 		
 		forwardButton = new JButton(">");
 		forwardButton.setPreferredSize(new Dimension(90, 90));
@@ -254,7 +270,14 @@ public class PomodoroFrame extends JFrame{
 		forwardButton.setBackground(Color.decode(COLOR_HEX[3]));
 		forwardButton.setForeground(Color.white);
 		
-		forwardButton.addActionListener(e -> setSequenceForward());
+		forwardButton.addActionListener(e -> {
+			try {
+				setSequenceForward();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
 		
 		restartButton = new JButton("⟳");
 		restartButton.setPreferredSize(new Dimension(90, 90));
@@ -262,7 +285,14 @@ public class PomodoroFrame extends JFrame{
 		restartButton.setBackground(Color.decode(COLOR_HEX[3]));
 		restartButton.setForeground(Color.white);
 		
-		restartButton.addActionListener(e -> restartSequence());
+		restartButton.addActionListener(e -> {
+			try {
+				restartSequence();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
 		
 		startButton = new JButton("Start");
 		startButton.setPreferredSize(new Dimension(180, 90));
@@ -358,19 +388,78 @@ public class PomodoroFrame extends JFrame{
 		timer.disableTimer();
 	}
 	
-	private void setSequenceBackward()
+	private void setSequenceBackward() throws InterruptedException
 	{
 		System.out.println("Back Button has been pressed");
+		
+		timer.enableTimer(); //Enables for brief time to update the timer
+		
+		//Setting sequence forward
+		timer.setCurrentSequence(timer.getCurrentSequence() + 1);
+		timer.updateSequenceLabel(sequenceLabel);
+		
+		//Updating Timer Based on current sequence
+		if(timer.getCurrentSequence() % 2 == 0) //Work Time
+		{
+			timer.setSeconds(timer.getCurrentTemplate().getWorkSecondsTotal());
+		}
+		else
+		{
+			timer.setSeconds(timer.getCurrentTemplate().getRestSecondsTotal());
+		}
+		
+		timer.updateTimerLabel(timerLabel);
+		
+		//Disabling Timer at end
+		timer.disableTimer();
 	}//End setSequenceBackward
 	
-	private void setSequenceForward()
+	private void setSequenceForward() throws InterruptedException
 	{
 		System.out.println("Forward Button has been pressed");
+		
+		timer.enableTimer(); //Enables for brief time to update the timer
+		
+		//Setting sequence forward
+		timer.setCurrentSequence(timer.getCurrentSequence() - 1);
+		timer.updateSequenceLabel(sequenceLabel);
+		
+		//Updating Timer Based on current sequence
+		if(timer.getCurrentSequence() % 2 == 0) //Work Time
+		{
+			timer.setSeconds(timer.getCurrentTemplate().getWorkSecondsTotal());
+		}
+		else
+		{
+			timer.setSeconds(timer.getCurrentTemplate().getRestSecondsTotal());
+		}
+		
+		timer.updateTimerLabel(timerLabel);
+		
+		//Disabling Timer at end
+		timer.disableTimer();
+		
 	}//End setSequenceForward
 	
-	private void restartSequence()
+	/**
+	 * This function resets the current sequence and secons of
+	 * the current timer. Also stops the timer after resetting it.
+	 * @throws InterruptedException
+	 */
+	private void restartSequence() throws InterruptedException
 	{
 		System.out.println("The Sequence has been Restarted");
-	}
+		
+		timer.enableTimer(); //Enables for brief time to update the timer
+		
+		//Resetting the Timer
+		timer.setSeconds(timer.getCurrentTemplate().getWorkSecondsTotal());
+		timer.updateTimerLabel(timerLabel);
+		timer.setCurrentSequence(timer.getDefaultSequence());
+		timer.updateSequenceLabel(sequenceLabel);
+		
+		//Disabling Timer
+		timer.disableTimer();
+	}//End restartSequence()
 	
 }//End class PomodoroFrame

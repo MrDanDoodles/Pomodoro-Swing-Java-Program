@@ -19,6 +19,7 @@ import java.awt.GridLayout;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import javax.swing.*;
+import java.io.File;
 
 public class PomodoroProgram {
 
@@ -27,14 +28,16 @@ public class PomodoroProgram {
 		final String TEMPLATE_PATH = "Templates.txt";
 		FileHandler fh = new FileHandler(TEMPLATE_PATH);
 		
+		File iconFile = fh.loadFile("TomatoIcon_resized.png");
+		ImageIcon iconImg = new ImageIcon(iconFile.getAbsolutePath());
+		System.out.println(iconFile.exists());
+		
 		//Creating a timer
 		Timer timer = new Timer(0);
 
 		//Creating the frame
-		PomodoroFrame frame = new PomodoroFrame(timer);
+		PomodoroFrame frame = new PomodoroFrame(timer, iconImg);
 		
 	}//End main()
 
 }//End class PomodoroProgram
-
-
