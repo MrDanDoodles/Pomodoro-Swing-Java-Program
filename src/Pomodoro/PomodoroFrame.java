@@ -1,3 +1,4 @@
+package Pomodoro;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,6 +9,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.File;
+import java.io.IOException;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 
 //180 , 330 , 190
@@ -365,6 +370,24 @@ public class PomodoroFrame extends JFrame{
 			//Logic for Work and Rest Cycle
 			if(timer.getSeconds() == 0 && timer.getCurrentSequence() > 0)
 			{
+				// - - PLAYING AUDIO - - 
+				try {
+					AudioHandler.playAudio();
+				} catch (UnsupportedAudioFileException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (LineUnavailableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				// - - SEQUENCE AND TIMER - - 
 				//Checking if it is rest or work
 				if(timer.getCurrentSequence() % 2 == 0)
 				{
@@ -375,7 +398,9 @@ public class PomodoroFrame extends JFrame{
 					timer.setSeconds(timer.getCurrentTemplate().getRestSecondsTotal()); //Setting to Rest Time
 				}
 			}
-		}
+			
+			
+		}//end if timer.getIsOn == true
 	}//End awaitTimerAction()
 	
 	private void startButton()

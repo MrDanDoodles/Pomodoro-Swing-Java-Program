@@ -1,11 +1,15 @@
 /**
 	This class will load all template data from Templates.txt
  */
+package Pomodoro;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import javax.swing.ImageIcon;
 
 public class FileHandler {
 	// = = = CLASS FIELDS = = = 
@@ -75,5 +79,11 @@ public class FileHandler {
 			return null;
 		}
 	}//End loadFile();
+	
+	public ImageIcon loadImageIcon(String path)
+	{
+		ImageIcon img = new ImageIcon(getClass().getResource(path));
+		return img;
+	}//End loadImageIcon
 	
 }//End class FileHandler

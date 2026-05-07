@@ -1,6 +1,8 @@
+package Pomodoro;
 /**
-	This class stores time templates that are stored
-	in Templates.txt
+	This class stores time templates that the 
+	program uses to dictate how much time is spent
+	working/studying and resting.
  */
 public class TimeTemplate {
 	// = = = CLASS FIELDS = = =

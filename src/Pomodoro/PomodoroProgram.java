@@ -1,5 +1,5 @@
 /*
-	Author: Danielle Rodriguez
+	Author: MrDanDoodles
 	Date: 4/11/2026
 	Project: Pomodoro Program
 	
@@ -12,6 +12,8 @@
 			-Change the fonts on all the labels and timers to custom fonts
 		-Figure out how to make rounded buttons
  */
+package Pomodoro;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -28,8 +30,8 @@ public class PomodoroProgram {
 		final String TEMPLATE_PATH = "Templates.txt";
 		FileHandler fh = new FileHandler(TEMPLATE_PATH);
 		
-		File iconFile = fh.loadFile("TomatoIcon_resized.png");
-		ImageIcon iconImg = new ImageIcon(iconFile.getAbsolutePath());
+		File iconFile = fh.loadFile("/Pomodoro Application/src/TomatoIcon_resized.png");
+		ImageIcon iconImg = fh.loadImageIcon("/Pomodoro/TomatoIcon_resized.png");
 		System.out.println(iconFile.exists());
 		
 		//Creating a timer

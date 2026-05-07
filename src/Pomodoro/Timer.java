@@ -1,3 +1,4 @@
+package Pomodoro;
 import javax.swing.JLabel;
 
 /**
@@ -6,7 +7,7 @@ import javax.swing.JLabel;
  */
 public class Timer {
 	// = = = CLASS FIELDS = = = 
-	final private int MILLISECONDS = 1000; //Needed for the 
+	final private int MILLISECONDS = 1000; 
 	final private int DEFAULT_SEQUENCE = 4;
 	
 	private TimeTemplate currentTemplate;
