@@ -35,10 +35,11 @@ public class PomodoroFrame extends JFrame{
 	final int HEIGHT = 700;
 	final int WIDTH = 800;
 	final String COLOR_HEX[] = {"#F63049", "#D02752", "#8A244B", "#111F35"}; //[Lght Red], [Medium Red], [Dark Red], [Dark Grey]
-	final int MILLISECONDS_TIMER = 1000;
+	final int MILLISECONDS_TIMER = 10;
 	
 	private Timer timer;			  //My custom timer
 	private javax.swing.Timer JTimer; //Swings own timer
+	private boolean finalSequenceIterated = false; //This value exists so that the audio plays at the end of timer as well.
 	
 	private JFrame frame;
 		//Panels
@@ -399,6 +400,30 @@ public class PomodoroFrame extends JFrame{
 				}
 			}
 			
+			//Playing audio at the end of all sequences
+			else if(timer.getSeconds() == 0 && timer.getCurrentSequence() == 0 && this.finalSequenceIterated == false)
+			{
+				//Setting value to true
+				this.finalSequenceIterated = true;
+				
+				// - - PLAYING AUDIO - - 
+				try {
+					AudioHandler.playAudio();
+				} catch (UnsupportedAudioFileException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (LineUnavailableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			
 		}//end if timer.getIsOn == true
 	}//End awaitTimerAction()
@@ -419,9 +444,10 @@ public class PomodoroFrame extends JFrame{
 		
 		timer.enableTimer(); //Enables for brief time to update the timer
 		
-		//Setting sequence forward
+		//Setting sequence backward
 		timer.setCurrentSequence(timer.getCurrentSequence() + 1);
 		timer.updateSequenceLabel(sequenceLabel);
+		this.finalSequenceIterated = false;
 		
 		//Updating Timer Based on current sequence
 		if(timer.getCurrentSequence() % 2 == 0) //Work Time
@@ -482,6 +508,7 @@ public class PomodoroFrame extends JFrame{
 		timer.updateTimerLabel(timerLabel);
 		timer.setCurrentSequence(timer.getDefaultSequence());
 		timer.updateSequenceLabel(sequenceLabel);
+		this.finalSequenceIterated = false;
 		
 		//Disabling Timer
 		timer.disableTimer();
