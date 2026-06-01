@@ -35,7 +35,7 @@ public class PomodoroFrame extends JFrame{
 	final int HEIGHT = 700;
 	final int WIDTH = 800;
 	final String COLOR_HEX[] = {"#F63049", "#D02752", "#8A244B", "#111F35"}; //[Lght Red], [Medium Red], [Dark Red], [Dark Grey]
-	final int MILLISECONDS_TIMER = 10;
+	final int MILLISECONDS_TIMER = 1000;
 	
 	private Timer timer;			  //My custom timer
 	private javax.swing.Timer JTimer; //Swings own timer
