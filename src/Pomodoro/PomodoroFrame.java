@@ -34,12 +34,14 @@ public class PomodoroFrame extends JFrame{
 	// = = = CLASS FIELDS = = = 
 	final int HEIGHT = 700;
 	final int WIDTH = 800;
-	final String COLOR_HEX[] = {"#F63049", "#D02752", "#8A244B", "#111F35"}; //[Lght Red], [Medium Red], [Dark Red], [Dark Grey]
+	final String COLOR_HEX[] = {"#F63049", "#D02752", "#8A244B", "#111F35"}; //[Light Red], [Medium Red], [Dark Red], [Dark Grey]
+	final String COLOR_HEX_ALT[] = {"#78B9B5", "#0F828C", "#065084"}; //[Light Blue], [Medium Blue], [Dark Blue]
 	final int MILLISECONDS_TIMER = 1000;
 	
 	private Timer timer;			  //My custom timer
 	private javax.swing.Timer JTimer; //Swings own timer
 	private boolean finalSequenceIterated = false; //This value exists so that the audio plays at the end of timer as well.
+	private boolean defaultColorThemeOn; //Determines which color theme to use, red or blue
 	
 	private JFrame frame;
 		//Panels
@@ -57,6 +59,7 @@ public class PomodoroFrame extends JFrame{
 	private JLabel sequenceLabel;
 	
 		//Buttons
+	private JButton colorSwitchButton;
 	private PresetButton sequence1Button;
 	private PresetButton sequence2Button;
 	private PresetButton sequence3Button;
@@ -69,19 +72,23 @@ public class PomodoroFrame extends JFrame{
 	
 	// = = = CONSTRUCTOR = = =
 	/**
-	 * 
+	 * This is the constructor that sets up the entire GUI
+	 * Starts the JTimer, and sets all necessary functions
+	 * to get it running properly
 	 * @param timer
 	 * @param iconImg
 	 */
 	public PomodoroFrame(Timer timer, ImageIcon iconImg)
 	{
+		//Define Color Theme by Default
+		this.defaultColorThemeOn = true; //Red
+		
 		//Initializing Timer Objects
 		this.timer = timer;		
 		this.JTimer = new javax.swing.Timer(MILLISECONDS_TIMER, e -> {
 			try {
 				awaitTimerAction(); //This is the actual logic of the code
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		});
@@ -106,26 +113,6 @@ public class PomodoroFrame extends JFrame{
 	
 	
 	// = = = CLASS METHODS = = = 
-	/**
-	 * This method is used for generating and accepting
-	 * all custom fonts that come with the program.
-	 */
-	private void generateFont()
-	{
-//		try {
-//		    Font customFont = Font.createFont(
-//		        Font.TRUETYPE_FONT,
-//		        new File("resources/fonts/MyFont.ttf")
-//		    ).deriveFont(24f); // set size here
-//
-//		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//		    ge.registerFont(customFont);
-//
-//		    //someComponent.setFont(customFont);
-//
-//		} catch (Exception e) {
-//		    e.printStackTrace();
-	}//End generateFont
 	
 		// - - - FRAME FUNCTIONS - - - 
 	
@@ -198,12 +185,24 @@ public class PomodoroFrame extends JFrame{
 		gbc.fill = GridBagConstraints.BOTH;
 		
 		// - - - TOP PANEL - - - 
-		titleLabel = new JLabel("Pomodoro");
+			//App Title Label
+		titleLabel = new JLabel("   Pomodoro");
 		titleLabel.setFont(new Font("SansSerif", Font.BOLD, 70));
 		titleLabel.setForeground(Color.white);
 		
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		upperPanel.add(titleLabel, BorderLayout.CENTER);
+		
+			//Color Alt Button
+		colorSwitchButton = new JButton("🌓");
+		colorSwitchButton.setPreferredSize(new Dimension(50,90));
+		colorSwitchButton.setForeground(Color.white);
+		colorSwitchButton.setBackground(Color.decode(COLOR_HEX[0]));
+		colorSwitchButton.setFont(new Font("SansSerif", Font.BOLD, 15));
+		
+		colorSwitchButton.addActionListener(e -> switchColorTheme());
+		
+		upperPanel.add(colorSwitchButton, BorderLayout.EAST);
 		
 		// - - - CENTER PANEL - - - 
 			//Center Labels Panel
@@ -214,7 +213,7 @@ public class PomodoroFrame extends JFrame{
 		gbc.gridx = 0; gbc.gridy = 0;
 		centerLabelsPanel.add(timerLabel, gbc);
 		
-		sequenceLabel = new JLabel("X Sequences Left");
+		sequenceLabel = new JLabel("Lets get to Work!");
 		sequenceLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
 		sequenceLabel.setForeground(Color.white);
 		
@@ -335,6 +334,55 @@ public class PomodoroFrame extends JFrame{
 	
 	
 		// - - - BUTTONS FUNCTIONS - - -
+	/**
+	 * This function performs the color changes when
+	 * the theme button is clicked with an array of
+	 * alt and default color schemes
+	 */
+	private void switchColorTheme()
+	{
+		// - Changing the Value when clicked -
+		if(this.defaultColorThemeOn == true)
+		{
+			this.defaultColorThemeOn = false;
+		}
+		else
+		{
+			this.defaultColorThemeOn = true;
+		}
+		
+		// - Checking bool value - 
+		if(this.defaultColorThemeOn == true) //Red
+		{
+			System.out.println("Theme set to Red");
+			
+			//Switching Panels
+			upperPanel.setBackground(Color.decode(COLOR_HEX[0]));
+			centerPanel.setBackground(Color.decode(COLOR_HEX[1]));
+			lowerPanel.setBackground(Color.decode(COLOR_HEX[2]));
+			
+			//Switching Buttons
+			colorSwitchButton.setBackground(Color.decode(COLOR_HEX[0]));
+			sequence1Button.setBackground(Color.decode(COLOR_HEX[2]));
+			sequence2Button.setBackground(Color.decode(COLOR_HEX[2]));
+			sequence3Button.setBackground(Color.decode(COLOR_HEX[2]));
+		}
+		else								 //Blue
+		{
+			System.out.println("Theme set to Blue");
+			
+			//Switching Panels
+			upperPanel.setBackground(Color.decode(COLOR_HEX_ALT[0]));
+			centerPanel.setBackground(Color.decode(COLOR_HEX_ALT[1]));
+			lowerPanel.setBackground(Color.decode(COLOR_HEX_ALT[2]));
+			
+			//Switching Buttons
+			colorSwitchButton.setBackground(Color.decode(COLOR_HEX_ALT[0]));
+			sequence1Button.setBackground(Color.decode(COLOR_HEX[3]));
+			sequence2Button.setBackground(Color.decode(COLOR_HEX[3]));
+			sequence3Button.setBackground(Color.decode(COLOR_HEX[3]));
+		}
+	}//End switchColorTheme()
 	
 	/**
 	 * This method sets the timer to the button's preset amount of time.
@@ -375,16 +423,16 @@ public class PomodoroFrame extends JFrame{
 				try {
 					AudioHandler.playAudio();
 				} catch (UnsupportedAudioFileException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				} catch (LineUnavailableException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 				
@@ -410,16 +458,16 @@ public class PomodoroFrame extends JFrame{
 				try {
 					AudioHandler.playAudio();
 				} catch (UnsupportedAudioFileException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				} catch (LineUnavailableException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 			}
